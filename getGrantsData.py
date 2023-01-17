@@ -81,7 +81,9 @@ def dataframe_to_sql(df, file_path):
             # If there are no missing values, add the row to the values list
             # replace single quotes with double quotes in title column
             title = row["title"].replace("'", "''")
-            values_list.append("('{}', '{}', '{}')".format(title, row["recipient"], row["status"]))
+            # Replace the first character of recipient with '\' and save it under the column named address
+            address = '\\' + row["recipient"][1:]
+            values_list.append("('{}', '{}' ::bytea, '{}')".format(title, address, row["status"]))
 
     # Create the values string
     values = ", ".join(values_list)
@@ -109,7 +111,7 @@ def main(id, API_KEY):
     dataframe_to_sql(df, sql_file_name)
 
 # Replace the id with the right round id and your own API_KEY
-id = "0xff519cf66c0ef800dcd32c92be89841859348fd6" #update this
-API_KEY = "YOUR_KEY_HERE" #update this
+id = "0xd95a1969c41112cee9a2c931e849bcef36a16f4c" #update this
+API_KEY = "YOUR_API_KEY" #update this
 main(id, API_KEY)
 print("done")
