@@ -24,7 +24,7 @@ def get_round_data(round_id, api_key):
         id: "''' + round_id + '''"
     }) {
         id
-        projects {
+        projects(first:300) {
         id
         project
         status
