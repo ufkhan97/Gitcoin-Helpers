@@ -4,8 +4,6 @@ import requests
 import pandas as pd
 import sys
 
-from hypercerts import get_metadata
-
 # Gitcoin Round Manager subgraph ID on The Graph
 SUBGRAPH = "BQXTJRLZi7NWGq5AXzQQxvYNa5i1HmqALEJwy3gGJHCr"
 ROUNDS = {
@@ -119,7 +117,6 @@ def main(round_id, api_key):
     df['ipfs_data'] = df['pointer'].apply(retrieve_ipfs_file)
     df['recipient'] = df['ipfs_data'].apply(lambda x: x["application"]["recipient"])
     df['title'] = df['ipfs_data'].apply(lambda x: x["application"]["project"]["title"])
-    df['hypercert'] = df['ipfs_data'].apply(get_metadata)
    
     #Construct names for files that will be saved
     csv_file_name = '{}_{}_data.csv'.format(current_time, id)
