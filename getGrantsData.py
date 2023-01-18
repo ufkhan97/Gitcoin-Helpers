@@ -106,11 +106,12 @@ def dataframe_to_sql(df, file_path):
         f.write(template.format(values))
 
 
-def main(round_id, api_key):
+def main(round_name, api_key):
     #Get the current time
     current_time = datetime.now().strftime("%Y_%m_%d-%H_%M_%S")
 
     #Pull the Data from TheGraph and save it to a dataframe
+    round_id = ROUNDS.get(round_name)
     df = get_round_data(round_id, api_key)
 
     # Add IPFS data with the grantees name and address 
@@ -119,8 +120,8 @@ def main(round_id, api_key):
     df['title'] = df['ipfs_data'].apply(lambda x: x["application"]["project"]["title"])
    
     #Construct names for files that will be saved
-    csv_file_name = '{}_{}_data.csv'.format(current_time, id)
-    sql_file_name = '{}_{}_data.sql'.format(current_time, id) 
+    csv_file_name = '{}_{}_data.csv'.format(current_time, round_name)
+    sql_file_name = '{}_{}_data.sql'.format(current_time, round_name) 
 
     # Save The Data 
     df.to_csv(csv_file_name, index=False)
@@ -131,13 +132,12 @@ if __name__ == "__main__":
 
     if len(sys.argv) == 3:
         round_name = sys.argv[2].lower()
-        round_id = ROUNDS.get(round_name)
-        if not round_id:
+        if not ROUNDS.get(round_name):
             print("Please enter a valid round name.")
             print("Options are:", list(ROUNDS.keys()))
         else:
             api_key  = sys.argv[1]
-            main(round_id, api_key)
+            main(round_name, api_key)
             print("\n\nDone!")        
     else:
         print("Enter API key followed by a Round ID")
