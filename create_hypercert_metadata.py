@@ -32,6 +32,7 @@ def mapper(data):
     impact_end_date  = 0
     collection       = "Gitcoin Alpha Round"
     allowlist        = "ipfs://bafkreiaxdog4clqiitnarc4rrzpgdlcjsg6k2nr2n2t4thwklccza34ubi"
+    default_image    = "ipfs://bafkreicchjbpbb2hfcg5mtmlz3zktf2wt5dnux2rzx33ta7b6bhrozlbgi"
 
     app_data         = data['application']
     project_data     = app_data['project']
@@ -52,18 +53,16 @@ def mapper(data):
     project_teamsize = answer_data[2].get('answer')
 
     round_contract   = app_data['round']
-    bg_color         = round_mapping[round_contract]['color']
     round_name       = round_mapping[round_contract]['name']
+    #bg_color         = round_mapping[round_contract]['color']
 
     return {
         "name": project_name,
         "description": project_descr,
         "external_url": project_url,
-        "image": project_icon,
-        "background_color": bg_color,    
-        "allowlist": allowlist,
+        "image": default_image,        
+        #"background_color": bg_color,    
         "properties": {
-            "collection": collection,
             "impact_scope": {
                 "name": "Impact Scope",
                 "value": [round_name],
@@ -86,14 +85,21 @@ def mapper(data):
             },
             "contributors": {
                 "name": "Contributors",
-                "value": project_teamsize,
-                "display_value": f"Team of {project_teamsize}"
+                "value": project_address,
+                "display_value": project_address
             },
             "rights": {
                 "name": "Rights",
                 "value": ["public-display", "-transfers"],
                 "display_value": "Public display"
             },
+        },
+        "hidden_properties": {
+            "version": "1.0.0",
+            "collection": collection,
+            "icon": project_icon,
+            "banner": project_banner,
+            "allowlist": allowlist
         }
     }
 
